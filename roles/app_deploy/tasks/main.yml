@@ -1,1 +1,5 @@
 ---
+- name: Install and configure MetalLB
+  ansible.builtin.import_tasks: metallb.yml
+  tags: metallb
+  run_once: true

@@ -10,3 +10,9 @@
   become: true
   roles:
     - k8s_setup
+
+- name: Deploy apps
+  hosts: all
+  become: true
+  roles:
+    - app_deploy
