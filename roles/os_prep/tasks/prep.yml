@@ -1,0 +1,88 @@
+---
+- name: Disable SWAP in runtime
+  ansible.builtin.shell: /usr/sbin/swapoff -a
+  changed_when: true
+
+- name: Remove SWAP from fstab completely
+  ansible.posix.mount:
+    path: none
+    fstype: swap
+    state: absent
+
+- name: Persist kernel modules on boot
+  ansible.builtin.copy:
+    content: |
+      overlay
+      br_netfilter
+      vxlan
+    dest: /etc/modules-load.d/k8s.conf
+    mode: "0644"
+
+- name: Load kernel modules right now
+  ansible.builtin.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
+    - vxlan
+
+- name: Set sysctl params for networking
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+    reload: true
+  loop:
+    - { name: "net.bridge.bridge-nf-call-iptables", value: "1" }
+    - { name: "net.bridge.bridge-nf-call-ip6tables", value: "1" }
+    - { name: "net.ipv4.ip_forward", value: "1" }
+
+- name: Update apt repository cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install containerd runtime
+  ansible.builtin.apt:
+    name: containerd
+    state: present
+
+- name: Ensure containerd config directory exists
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    mode: "0755"
+
+# AI generated
+
+- name: Get default containerd config
+  ansible.builtin.command:
+    cmd: containerd config default
+  register: containerd_default
+  changed_when: false
+
+- name: Deploy containerd config
+  ansible.builtin.copy:
+    dest: /etc/containerd/config.toml
+    content: |
+      {{ (containerd_default.stdout
+         | replace('SystemdCgroup = false', 'SystemdCgroup = true')
+         | regex_replace(
+              'sandbox_image = "registry\.k8s\.io/pause:3\.[0-9]+"',
+              'sandbox_image = "registry.k8s.io/pause:3.10"'
+           )
+         | regex_replace(
+              'bin_dir = "/usr/lib/cni"',
+              'bin_dir = "/opt/cni/bin"'
+           )
+        ) }}
+    mode: "0644"
+  register: containerd_deploy
+
+- name: Restart containerd if config changed
+  ansible.builtin.systemd:
+    name: containerd
+    state: restarted
+    enabled: true
+  when: containerd_deploy.changed

@@ -1,0 +1,11 @@
+---
+- name: Check if node is already in cluster
+  ansible.builtin.stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_check
+
+- name: Join worker node to cluster
+  ansible.builtin.shell: "{{ hostvars['k8s_token_holder']['join_cmd'] }}"
+  become: true
+  changed_when: true
+  when: not kubelet_check.stat.exists

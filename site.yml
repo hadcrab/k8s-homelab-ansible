@@ -1,0 +1,12 @@
+---
+- name: Prepare nodes for Kubernetes cluster
+  hosts: all
+  become: true
+  roles:
+    - os_prep
+
+- name: Initialize cluster
+  hosts: all
+  become: true
+  roles:
+    - k8s_setup

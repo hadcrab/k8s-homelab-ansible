@@ -1,0 +1,57 @@
+---
+- name: Check for presented kubeadm config
+  ansible.builtin.stat:
+    path: /etc/kubernetes/admin.conf
+  register: kubeadm_init_check
+
+- name: Initialize cluster
+  ansible.builtin.shell: kubeadm init --pod-network-cidr=10.244.0.0/16
+  become: true
+  changed_when: true
+  when: not kubeadm_init_check.stat.exists
+
+- name: Create .kube directory for user
+  ansible.builtin.file:
+    path: /home/control/.kube
+    state: directory
+    mode: "0755"
+    owner: control
+    group: control
+
+- name: Copy admin.conf
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/control/.kube/config
+    remote_src: true
+    mode: "0600"
+    owner: control
+    group: control
+
+- name: Download Flannel CNI manifest
+  ansible.builtin.get_url:
+    url: "https://github.com/flannel-io/flannel/releases/download/v0.25.5/kube-flannel.yml"
+    dest: /tmp/kube-flannel.yml
+    mode: "0644"
+    force: false
+  register: flannel_download
+
+- name: Deploy Flannel CNI
+  ansible.builtin.command: kubectl apply -f /tmp/kube-flannel.yml
+  environment:
+    KUBECONFIG: /home/control/.kube/config
+  become: false
+  register: flannel_apply
+  changed_when: >
+    'created' in flannel_apply.stdout or
+    'configured' in flannel_apply.stdout
+  when: flannel_download.changed
+
+- name: Get connection command for workers
+  ansible.builtin.shell: kubeadm token create --print-join-command
+  changed_when: false
+  register: join_command
+
+- name: Save connection command
+  ansible.builtin.add_host:
+    name: "k8s_token_holder"
+    join_cmd: "{{ join_command.stdout }}"

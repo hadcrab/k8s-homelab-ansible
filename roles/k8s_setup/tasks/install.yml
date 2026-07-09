@@ -1,0 +1,34 @@
+---
+#- name: Remove old legacy kubernetes repo file if exists
+#  ansible.builtin.file:
+#    path: /etc/apt/sources.list.d/kubernetes.list
+#    state: absent
+
+- name: Install prerequisite packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+    update_cache: true
+
+- name: Add k8s repo
+  ansible.builtin.deb822_repository:
+    name: kubernetes
+    types: deb
+    uris: https://pkgs.k8s.io/core:/stable:/v1.36/deb/
+    suites: /
+    signed_by: https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key
+
+- name: Intall k8s main packages
+  ansible.builtin.apt:
+    name:
+      - kubeadm=1.36.1-1.1
+      - kubelet=1.36.1-1.1
+      - kubectl=1.36.1-1.1
+    state: present
+    update_cache: true
+    allow_downgrades: true
+    dpkg_options: "force-hold"

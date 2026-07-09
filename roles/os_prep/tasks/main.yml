@@ -1,0 +1,4 @@
+---
+- name: Prepare machines for k8s
+  ansible.builtin.include_tasks: prep.yml
+  tags: prepare
