@@ -10,6 +10,7 @@
   kubernetes.core.helm:
     name: metallb
     chart_ref: metallb/metallb
+    chart_version: "0.16.1"
     release_namespace: metallb-system
     create_namespace: true
     kubeconfig: ~/.kube/config

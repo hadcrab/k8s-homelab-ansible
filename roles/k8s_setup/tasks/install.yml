@@ -22,12 +22,12 @@
     suites: /
     signed_by: https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key
 
-- name: Intall k8s main packages
+- name: Install k8s main packages
   ansible.builtin.apt:
     name:
-      - kubeadm=1.36.1-1.1
-      - kubelet=1.36.1-1.1
-      - kubectl=1.36.1-1.1
+      - kubeadm={{ k8s_version }}
+      - kubelet={{ k8s_version }}
+      - kubectl={{ k8s_version }}
     state: present
     update_cache: true
     allow_downgrades: true

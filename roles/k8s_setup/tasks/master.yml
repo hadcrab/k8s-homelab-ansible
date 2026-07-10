@@ -32,7 +32,7 @@
     url: "https://github.com/flannel-io/flannel/releases/download/v0.25.5/kube-flannel.yml"
     dest: /tmp/kube-flannel.yml
     mode: "0644"
-    force: false
+    force: true
   register: flannel_download
 
 - name: Deploy Flannel CNI
@@ -50,8 +50,8 @@
   ansible.builtin.shell: kubeadm token create --print-join-command
   changed_when: false
   register: join_command
+  no_log: true
 
 - name: Save connection command
-  ansible.builtin.add_host:
-    name: "k8s_token_holder"
-    join_cmd: "{{ join_command.stdout }}"
+  ansible.builtin.set_fact:
+    k8s_join_cmd: "{{ join_command.stdout }}"

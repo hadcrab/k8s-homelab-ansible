@@ -1,18 +1,35 @@
 ---
-- name: Prepare nodes for Kubernetes cluster
+- name: Prepare OS
   hosts: all
   become: true
   roles:
     - os_prep
 
-- name: Initialize cluster
+- name: Install k8s packages
   hosts: all
   become: true
   roles:
     - k8s_setup
+  tags: install
+
+- name: Init control plane
+  hosts: control_plane
+  become: true
+  roles:
+    - role: k8s_setup
+      tasks_from: master.yml
+  tags: init
+
+- name: Join workers
+  hosts: workers
+  become: true
+  roles:
+    - role: k8s_setup
+      tasks_from: workers.yml
+  tags: workers
 
 - name: Deploy apps
-  hosts: all
-  become: true
+  hosts: control_plane
+  become: false
   roles:
     - app_deploy

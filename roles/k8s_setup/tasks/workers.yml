@@ -5,7 +5,8 @@
   register: kubelet_check
 
 - name: Join worker node to cluster
-  ansible.builtin.shell: "{{ hostvars['k8s_token_holder']['join_cmd'] }}"
+  ansible.builtin.shell: "{{ hostvars[groups['control_plane'][0]]['k8s_join_cmd'] }}"
   become: true
   changed_when: true
   when: not kubelet_check.stat.exists
+  no_log: true

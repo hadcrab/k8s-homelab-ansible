@@ -1,7 +1,7 @@
 ---
-- name: Disable SWAP in runtime
-  ansible.builtin.shell: /usr/sbin/swapoff -a
-  changed_when: true
+- name: Disable swap permanently (if enabled)
+  command: swapoff -a
+  when: ansible_facts['swaptotal_mb'] > 0
 
 - name: Remove SWAP from fstab completely
   ansible.posix.mount:
@@ -53,8 +53,6 @@
     path: /etc/containerd
     state: directory
     mode: "0755"
-
-# AI generated
 
 - name: Get default containerd config
   ansible.builtin.command:
