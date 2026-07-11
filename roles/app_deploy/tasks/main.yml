@@ -2,4 +2,7 @@
 - name: Install and configure MetalLB
   ansible.builtin.import_tasks: metallb.yml
   tags: metallb
-  run_once: true
+
+- name: Install and configure Traefik
+  ansible.builtin.import_tasks: ingress.yml
+  tags: traefik

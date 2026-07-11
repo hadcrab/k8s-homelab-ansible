@@ -33,7 +33,6 @@
         addresses:
           - 192.168.1.200-192.168.1.220
   delegate_to: localhost
-  run_once: true
   become: false
 
 - name: Configure L2Advertisement
@@ -48,5 +47,4 @@
         namespace: metallb-system
       spec: {}
   delegate_to: localhost
-  run_once: true
   become: false
