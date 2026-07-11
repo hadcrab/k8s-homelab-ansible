@@ -1,2 +1,3 @@
 ---
 metallb_version: "0.16.1"
+traefik_version: "41.0.2"

@@ -1,0 +1,26 @@
+---
+- name: Add Traefik repo
+  kubernetes.core.helm_repository:
+    name: traefik
+    repo_url: "https://traefik.github.io/charts"
+  delegate_to: localhost
+  become: false
+
+- name: Install Traefik with helm
+  kubernetes.core.helm:
+    name: traefik
+    chart_ref: traefik/traefik
+    chart_version: "{{ traefik_version }}"
+    release_namespace: traefik-system
+    create_namespace: true
+    values:
+      ingressRoute:
+        dashboard:
+          enabled: true
+          entryPoints:
+            - web
+    kubeconfig: ~/.kube/config
+    atomic: true
+    wait: true
+  delegate_to: localhost
+  become: false
