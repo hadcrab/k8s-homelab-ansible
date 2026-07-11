@@ -31,7 +31,7 @@
         namespace: metallb-system
       spec:
         addresses:
-          - 192.168.122.200-192.168.122.220
+          - "{{ metallb_pool_range }}"
   delegate_to: localhost
   become: false
 
@@ -43,7 +43,7 @@
       apiVersion: metallb.io/v1beta1
       kind: L2Advertisement
       metadata:
-        name: home-pool
+        name: "{{ metallb_pool_name }}"
         namespace: metallb-system
       spec: {}
   delegate_to: localhost

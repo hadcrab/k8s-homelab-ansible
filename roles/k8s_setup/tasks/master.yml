@@ -5,7 +5,7 @@
   register: kubeadm_init_check
 
 - name: Initialize cluster
-  ansible.builtin.shell: kubeadm init --pod-network-cidr=10.244.0.0/16
+  ansible.builtin.shell: kubeadm init --pod-network-cidr={{ cidr_network }}
   become: true
   changed_when: true
   when: not kubeadm_init_check.stat.exists
@@ -29,7 +29,7 @@
 
 - name: Download Flannel CNI manifest
   ansible.builtin.get_url:
-    url: "https://github.com/flannel-io/flannel/releases/download/v0.25.5/kube-flannel.yml"
+    url: "{{ flannel_url }}"
     dest: /tmp/kube-flannel.yml
     mode: "0644"
     force: true
