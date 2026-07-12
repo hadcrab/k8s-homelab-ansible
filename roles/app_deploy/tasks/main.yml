@@ -6,3 +6,7 @@
 - name: Install and configure Traefik
   ansible.builtin.import_tasks: ingress.yml
   tags: traefik
+
+- name: Install and configure Cert-Manager
+  ansible.builtin.import_tasks: certmgr.yml
+  tags: certmgr
