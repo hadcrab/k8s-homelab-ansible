@@ -1,0 +1,9 @@
+---
+- name: Install prerequisite packages
+  ansible.builtin.apt:
+    name:
+      - open-iscsi
+      - nfs-common
+      - curl
+    state: present
+    update_cache: true

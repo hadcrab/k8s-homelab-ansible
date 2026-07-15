@@ -33,3 +33,19 @@
   become: false
   roles:
     - app_deploy
+
+- name: Install Longhorn prerequisites
+  hosts: all
+  become: true
+  roles:
+    - role: longhorn
+      tasks_from: prereqs.yml
+  tags: longhorn-prereqs
+
+- name: Deploy Longhorn
+  hosts: control_plane
+  become: false
+  roles:
+    - role: longhorn
+      tasks_from: install.yml
+  tags: longhorn

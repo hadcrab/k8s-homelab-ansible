@@ -1,0 +1,7 @@
+---
+- name: Install prereq packages
+  ansible.builtin.import_tasks: prereqs.yml
+  become: true
+
+- name: Install Longhorn
+  ansible.builtin.import_tasks: install.yml
