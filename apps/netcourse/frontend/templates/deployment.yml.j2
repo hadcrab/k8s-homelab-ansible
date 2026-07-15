@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ app_name }}
+  namespace: {{ app_namespace }}
+spec:
+  replicas: {{ app_replicas }}
+  selector:
+    matchLabels:
+      app: {{ app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ app_name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ pull_secret }}
+      containers:
+        - name: {{ app_name }}
+          image: {{ app_image }}
+          ports:
+            - containerPort: {{ app_port }}
+          env:
+            - name: NUXT_PUBLIC_API_BASE
+              value: "http://netcourse-backend:3000"
