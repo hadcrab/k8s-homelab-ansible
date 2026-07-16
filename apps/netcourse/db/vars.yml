@@ -1,0 +1,7 @@
+---
+app_namespace: netcourse
+app_name: netcourse-postgres
+app_port: 5432
+app_image: postgres:18-alpine
+db_user: netcourse
+db_name: netcourse

@@ -56,3 +56,10 @@
   tasks:
     - ansible.builtin.include_tasks: apps/netcourse/frontend/deploy.yml
   tags: netcourse-frontend
+
+- name: Deploy netcourse DB
+  hosts: control_plane
+  become: false
+  tasks:
+    - ansible.builtin.include_tasks: apps/netcourse/db/deploy.yml
+  tags: netcourse-db
