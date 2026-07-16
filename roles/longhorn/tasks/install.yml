@@ -59,3 +59,4 @@
           tls:
             secretName: longhorn-ui-tls
   delegate_to: localhost
+  become: false
