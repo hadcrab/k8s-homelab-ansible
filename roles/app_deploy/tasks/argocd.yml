@@ -19,7 +19,7 @@
           server.insecure: true
       server:
         ingress:
-          enabled: true
+          enabled: false
           ingressClassName: traefik
           hosts:
             - argocd.kube
@@ -30,5 +30,30 @@
     kubeconfig: ~/.kube/config
     atomic: true
     wait: true
+  delegate_to: localhost
+  become: false
+
+- name: Create ArgoCD IngressRoute
+  kubernetes.core.k8s:
+    kubeconfig: ~/.kube/config
+    state: present
+    definition:
+      apiVersion: traefik.io/v1alpha1
+      kind: IngressRoute
+      metadata:
+        name: argocd-server
+        namespace: argocd
+      spec:
+        entryPoints:
+          - websecure
+        routes:
+          - kind: Rule
+            match: Host(`argocd.kube`)
+            priority: 10
+            services:
+              - name: argocd-server
+                port: 80
+        tls:
+          certResolver: default
   delegate_to: localhost
   become: false
