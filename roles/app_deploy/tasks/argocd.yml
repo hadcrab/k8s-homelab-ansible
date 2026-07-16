@@ -57,3 +57,23 @@
           certResolver: default
   delegate_to: localhost
   become: false
+
+- name: Check if root Application exists
+  kubernetes.core.k8s_info:
+    kubeconfig: ~/.kube/config
+    api_version: argoproj.io/v1alpha1
+    kind: Application
+    name: root
+    namespace: argocd
+  register: root_app
+  delegate_to: localhost
+  become: false
+
+- name: Bootstrap root Application
+  kubernetes.core.k8s:
+    kubeconfig: ~/.kube/config
+    state: present
+    template: root-application.yml.j2
+  delegate_to: localhost
+  become: false
+  when: root_app.resources | length == 0
