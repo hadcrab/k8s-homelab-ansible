@@ -1,0 +1,34 @@
+---
+- name: Add ArgoCD repo
+  kubernetes.core.helm_repository:
+    name: argocd
+    repo_url: "https://argoproj.github.io/argo-helm"
+  delegate_to: localhost
+  become: false
+
+- name: Install ArgoCD with helm
+  kubernetes.core.helm:
+    name: argocd
+    chart_ref: argocd/argo-cd
+    chart_version: "{{ argocd_version }}"
+    release_namespace: argocd
+    create_namespace: true
+    values:
+      configs:
+        params:
+          server.insecure: true
+      server:
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          hosts:
+            - argocd.kube
+          tls:
+            - hosts:
+                - argocd.kube
+              secretName: argocd-tls
+    kubeconfig: ~/.kube/config
+    atomic: true
+    wait: true
+  delegate_to: localhost
+  become: false

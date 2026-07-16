@@ -33,6 +33,7 @@
   become: false
   roles:
     - app_deploy
+  tags: sysapps
 
 - name: Install Longhorn prerequisites
   hosts: all

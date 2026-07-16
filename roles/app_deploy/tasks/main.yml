@@ -10,3 +10,7 @@
 - name: Install and configure Cert-Manager
   ansible.builtin.import_tasks: certmgr.yml
   tags: certmgr
+
+- name: Install and configure ArgoCD
+  ansible.builtin.import_tasks: argocd.yml
+  tags: argocd

@@ -2,5 +2,6 @@
 metallb_version: "0.16.1"
 traefik_version: "41.0.2"
 certmgr_version: "1.21.0"
+argocd_version: "10.1.4"
 metallb_pool_name: "home-pool"
 metallb_pool_range: "192.168.122.200-192.168.122.220"
