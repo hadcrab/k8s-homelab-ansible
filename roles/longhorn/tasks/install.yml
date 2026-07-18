@@ -15,8 +15,7 @@
     create_namespace: true
     values:
       persistence:
-        defaultClassParameters:
-          numberOfReplicas: "{{ longhorn_default_class_replicas }}"
+        defaultClassReplicaCount: "{{ longhorn_default_class_replicas }}"
       defaultSettings:
         defaultReplicaCount: "{{ longhorn_default_replica_count }}"
         replicaAutoBalance: "{{ longhorn_replica_auto_balance }}"
