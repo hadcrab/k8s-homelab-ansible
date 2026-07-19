@@ -22,6 +22,16 @@
   delegate_to: localhost
   become: false
 
+- name: Wait for cert-manager to be ready
+  ansible.builtin.command: >
+    kubectl wait --namespace cert-manager
+    --for=condition=available deployment
+    --all --timeout=120s
+  environment:
+    KUBECONFIG: "{{ lookup('env', 'HOME') }}/.kube/config"
+  changed_when: false
+  delegate_to: localhost
+
 - name: Configure Self-Signed Local CA Infrastructure
   kubernetes.core.k8s:
     kubeconfig: ~/.kube/config

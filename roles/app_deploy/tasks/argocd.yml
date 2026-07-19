@@ -36,6 +36,16 @@
   delegate_to: localhost
   become: false
 
+- name: Wait for ArgoCD to be ready
+  ansible.builtin.command: >
+    kubectl wait --namespace argocd
+    --for=condition=available deployment
+    --all --timeout=180s
+  environment:
+    KUBECONFIG: "{{ lookup('env', 'HOME') }}/.kube/config"
+  changed_when: false
+  delegate_to: localhost
+
 - name: Create ArgoCD IngressRoute
   kubernetes.core.k8s:
     kubeconfig: ~/.kube/config

@@ -19,6 +19,16 @@
   delegate_to: localhost
   become: false
 
+- name: Wait for MetalLB to be ready
+  ansible.builtin.command: >
+    kubectl wait --namespace metallb-system
+    --for=condition=available deployment
+    --all --timeout=120s
+  environment:
+    KUBECONFIG: "{{ lookup('env', 'HOME') }}/.kube/config"
+  changed_when: false
+  delegate_to: localhost
+
 - name: Configure MetalLB IP pool
   kubernetes.core.k8s:
     kubeconfig: ~/.kube/config

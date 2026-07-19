@@ -27,6 +27,14 @@
     owner: "{{ k8s_control_user }}"
     group: "{{ k8s_control_user }}"
 
+- name: Wait for control plane node to be Ready
+  ansible.builtin.command: >
+    kubectl wait --for=condition=Ready node/{{ ansible_hostname }}
+    --timeout=120s
+  environment:
+    KUBECONFIG: "{{ k8s_control_home }}/.kube/config"
+  changed_when: false
+
 - name: Download Flannel CNI manifest
   ansible.builtin.get_url:
     url: "{{ flannel_url }}"
