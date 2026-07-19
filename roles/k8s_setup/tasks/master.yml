@@ -12,20 +12,20 @@
 
 - name: Create .kube directory for user
   ansible.builtin.file:
-    path: /home/control/.kube
+    path: "{{ k8s_control_home }}/.kube"
     state: directory
     mode: "0755"
-    owner: control
-    group: control
+    owner: "{{ k8s_control_user }}"
+    group: "{{ k8s_control_user }}"
 
 - name: Copy admin.conf
   ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
-    dest: /home/control/.kube/config
+    dest: "{{ k8s_control_home }}/.kube/config"
     remote_src: true
     mode: "0600"
-    owner: control
-    group: control
+    owner: "{{ k8s_control_user }}"
+    group: "{{ k8s_control_user }}"
 
 - name: Download Flannel CNI manifest
   ansible.builtin.get_url:
@@ -38,7 +38,7 @@
 - name: Deploy Flannel CNI
   ansible.builtin.command: kubectl apply -f /tmp/kube-flannel.yml
   environment:
-    KUBECONFIG: /home/control/.kube/config
+    KUBECONFIG: "{{ k8s_control_home }}/.kube/config"
   become: false
   register: flannel_apply
   changed_when: >
