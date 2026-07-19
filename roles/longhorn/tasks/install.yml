@@ -19,6 +19,8 @@
       defaultSettings:
         defaultReplicaCount: "{{ longhorn_default_replica_count }}"
         replicaAutoBalance: "{{ longhorn_replica_auto_balance }}"
+        storageMinimalAvailablePercentage: "{{ longhorn_storage_minimal_available_percentage }}"
+        storageReservedPercentageForDefaultDisk: "{{ longhorn_storage_reserved_percentage_for_default_disk }}"
     kubeconfig: ~/.kube/config
     wait: true
   delegate_to: localhost
