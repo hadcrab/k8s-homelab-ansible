@@ -46,31 +46,6 @@
   changed_when: false
   delegate_to: localhost
 
-- name: Create ArgoCD IngressRoute
-  kubernetes.core.k8s:
-    kubeconfig: ~/.kube/config
-    state: present
-    definition:
-      apiVersion: traefik.io/v1alpha1
-      kind: IngressRoute
-      metadata:
-        name: argocd-server
-        namespace: argocd
-      spec:
-        entryPoints:
-          - websecure
-        routes:
-          - kind: Rule
-            match: Host(`argocd.kube`)
-            priority: 10
-            services:
-              - name: argocd-server
-                port: 80
-        tls:
-          certResolver: default
-  delegate_to: localhost
-  become: false
-
 - name: Check if root Application exists
   kubernetes.core.k8s_info:
     kubeconfig: ~/.kube/config
