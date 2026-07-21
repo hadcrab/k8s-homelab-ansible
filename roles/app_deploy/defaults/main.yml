@@ -1,3 +1,2 @@
 ---
-traefik_version: "41.0.2"
 argocd_version: "10.1.4"
