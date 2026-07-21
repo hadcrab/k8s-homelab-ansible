@@ -39,14 +39,5 @@
   hosts: all
   become: true
   roles:
-    - role: longhorn
-      tasks_from: prereqs.yml
+    - longhorn
   tags: longhorn-prereqs
-
-- name: Deploy Longhorn
-  hosts: control_plane
-  become: false
-  roles:
-    - role: longhorn
-      tasks_from: install.yml
-  tags: longhorn
