@@ -1,0 +1,5 @@
+---
+skip_list:
+  - yaml[line-length]
+  - role-name[path]
+  - no-changed-when

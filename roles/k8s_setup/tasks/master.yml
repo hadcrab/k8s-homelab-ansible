@@ -5,7 +5,7 @@
   register: kubeadm_init_check
 
 - name: Initialize cluster
-  ansible.builtin.shell: kubeadm init --pod-network-cidr={{ cidr_network }}
+  ansible.builtin.command: kubeadm init --pod-network-cidr={{ cidr_network }}
   become: true
   changed_when: true
   when: not kubeadm_init_check.stat.exists
@@ -55,7 +55,7 @@
   when: flannel_download.changed
 
 - name: Get connection command for workers
-  ansible.builtin.shell: kubeadm token create --print-join-command
+  ansible.builtin.command: kubeadm token create --print-join-command
   changed_when: false
   register: join_command
   no_log: true

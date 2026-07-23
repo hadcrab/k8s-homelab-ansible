@@ -1,6 +1,6 @@
 ---
 - name: Disable swap permanently (if enabled)
-  command: swapoff -a
+  ansible.builtin.command: swapoff -a
   when: ansible_facts['swaptotal_mb'] > 0
 
 - name: Remove SWAP from fstab completely
@@ -76,11 +76,10 @@
            )
         ) }}
     mode: "0644"
-  register: containerd_deploy
+  notify: Restart containerd
 
-- name: Restart containerd if config changed
+- name: Ensure containerd is running
   ansible.builtin.systemd:
     name: containerd
-    state: restarted
+    state: started
     enabled: true
-  when: containerd_deploy.changed
