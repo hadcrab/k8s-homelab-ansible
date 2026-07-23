@@ -1,6 +1,7 @@
 ---
 # Use this command to receive WebUI admin password
-# kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 -d
+# kubectl get secret argocd-initial-admin-secret \
+#   -n argocd -o jsonpath='{.data.password}' | base64 -d
 
 - name: Add ArgoCD repo
   kubernetes.core.helm_repository:

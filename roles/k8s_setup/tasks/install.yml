@@ -1,5 +1,5 @@
 ---
-#- name: Remove old legacy kubernetes repo file if exists
+# - name: Remove old legacy kubernetes repo file if exists
 #  ansible.builtin.file:
 #    path: /etc/apt/sources.list.d/kubernetes.list
 #    state: absent

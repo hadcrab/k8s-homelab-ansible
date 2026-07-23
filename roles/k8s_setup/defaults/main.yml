@@ -2,7 +2,9 @@
 k8s_version: "1.36.1-1.1"
 k8s_uri: "https://pkgs.k8s.io/core:/stable:/v1.36/deb/"
 k8s_release_key: "https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key"
-flannel_url: "https://github.com/flannel-io/flannel/releases/download/v0.25.5/kube-flannel.yml"
+flannel_url: >-
+  https://github.com/flannel-io/flannel/releases
+  /download/v0.25.5/kube-flannel.yml
 cidr_network: "10.244.0.0/16"
 k8s_control_user: control
 k8s_control_home: "/home/{{ k8s_control_user }}"
